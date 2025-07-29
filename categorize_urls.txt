@@ -1,0 +1,41 @@
+def categorize_urls(urls, base_domain):
+    """Categorize URLs into different groups based on predefined categories."""
+    category_keywords = {
+        "About": ["about", "aboutus", "about-us", "our-company", "our-story", "who-we-are", "company", "mission"],
+        "Contact": ["contact", "contactus", "contact-us", "support", "help", "reach-us", "getintouch", "get-in-touch", "locations"],
+        "Products": ["product", "products", "solutions", "offerings", "shop", "store", "buy", "catalog", "collection", "portfolio"],
+        "Services": ["service", "services", "capabilities", "what-we-do", "offerings", "solutions", "expertise", "consulting"],
+        "Privacy": ["privacy","privacy-policy","terms","conditions"]
+    }
+    
+    categorized_urls = {
+        "About": [],
+        "Contact": [],
+        "Products": [],
+        "Services": [],
+        "Privacy": []
+    }
+
+    for url in urls:
+        # Skip social media URLs
+        if is_social_media_url(url):
+            continue
+            
+        lower_url = url.lower()
+        
+        categorized = False
+        for category, keywords in category_keywords.items():
+            for keyword in keywords:
+                if f"/{keyword}" in lower_url or f"/{keyword}/" in lower_url or f"={keyword}" in lower_url:
+                    categorized_urls[category].append(url)
+                    categorized = True
+                    break
+            if categorized:
+                break
+                
+    # Limit each category to a maximum of 2 URLs
+    for category in categorized_urls:
+        if len(categorized_urls[category]) > 2:
+            categorized_urls[category] = categorized_urls[category][:2]
+                
+    return categorized_urls
